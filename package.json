@@ -1,0 +1,22 @@
+{
+	"name": "wrapup",
+	"description": "wraps up node packages for web development",
+	"version": "0.8.7",
+	"license": "MIT (http://mootools.net/license.txt)",
+	"main": "./lib/main.js",
+	"bin" : {
+		"wrup" : "./bin/wrup.js"
+	},
+	"keywords": ["wrap", "wrapper", "wrapup", "packager", "browser", "package manager"],
+	"homepage": "http://github.com/kamicane/wrapup",
+	"author": "Valerio Proietti <@kamicane> (http://mad4milk.net)",
+	"bugs": "https://github.com/kamicane/wrapup/issues",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/kamicane/wrapup.git"
+	},
+	"dependencies": {
+		"semver": ">=1.0.13",
+		"uglify-js": ">=1.2.5"
+	}
+}
