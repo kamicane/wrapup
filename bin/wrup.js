@@ -22,7 +22,7 @@ var parsed =
 	.option('--version', '-v', 'prints the version number.', function(){
 		return true
 	})
-	.option('--require', '-r', 'wraps up a space separated list of paths and|or files you require. defaults to cwd.', function(){
+	.option('--require', '-r', 'the list of paths and|or files that you require. defaults to cwd.', function(){
 		return arguments.length ? Array.prototype.slice.call(arguments) : [process.cwd()]
 	})
 	.option('--compress', '-c', 'compresses output using uglify-js mangle and squeeze. defaults to no|false.', bool)
