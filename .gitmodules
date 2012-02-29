@@ -1,0 +1,6 @@
+[submodule "node_modules/uglify-js"]
+	path = node_modules/uglify-js
+	url = https://github.com/mishoo/UglifyJS.git
+[submodule "node_modules/semver"]
+	path = node_modules/semver
+	url = https://github.com/isaacs/node-semver.git
