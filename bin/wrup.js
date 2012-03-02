@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 var wrup = require("../lib/main")(),
-	clio = require("../lib/clio")(),
+	clint = require("clint")(),
 	fs = require("fs"),
 	json = require("../package")
 
@@ -9,67 +9,117 @@ console.warn("   , , , __  __.  _   . . _  ")
 console.warn("  (_(_/_/ (_(_/|_/_)_(_/_/_)_")
 console.warn("                /       /  " + json.version + "\n")
 
-var bool = function(value){
-	if (value == 'no' || value == 'false') return false
+var specify = function(value){
+	if (value === 'no' || value === 'false') return false
 	return true
 }
 
-var parsed =
+clint.option('--help', '-h',
+             'general usage information.')
 
-	clio.option('--help', '-h', 'general usage information.', function(){
-		return true
-	})
-	.option('--version', '-v', 'prints the version number.', function(){
-		return true
-	})
-	.option('--require', '-r', 'the list of paths and|or files that you require. defaults to cwd.', function(){
-		return arguments.length ? Array.prototype.slice.call(arguments) : [process.cwd()]
-	})
-	.option('--compress', '-c', 'compresses output using uglify-js mangle and squeeze. defaults to no|false.', bool)
-	.option('--wrup', '-w', 'includes the wrapup client, a 3-lines require-like implementation to dynamically require anything included. defaults to yes|true.', bool)
-	.option('--globalize', '-g', 'sets the mains of the modules you specifically required to the global scope. defaults to no|false.', bool)
-	.option('--output', '-o', 'wraps up the contents of your modules to the specified file, instead of stdout.', function(dir){
-		return dir
-	})
+clint.option('--version',
+             '-v', 'prints the version number.')
 
-	.parse(process.argv.slice(2))
+clint.option('--module', '-m',
+             'a manually named module to require <name /path/to/module> or <name package>')
 
+clint.option('--package', '-p',
+             'a valid package to require </path/to> or </path/to/package.json> or <package>')
 
-if (!parsed || parsed.help){
-	console.log(clio.help())
-	process.exit()
+clint.option('--compress', '-c',
+             'compresses output using uglify-js mangle and squeeze. defaults to no|false.', specify)
+
+clint.option('--wrup', '-w',
+             'includes the wrup client, to retrieve named modules as wrup(name).', specify)
+
+clint.option('--globalize', '-g',
+             'sets the mains of the modules you specifically required to the global scope. defaults to no|false.', specify)
+
+clint.option('--output', '-o',
+             'wraps up the contents of your modules to the specified file, instead of stdout.')
+
+var help = function(err){
+	console.log(clint.help())
+	process.exit(err)
 }
 
-if (parsed.version){
+var args = process.argv.slice(2)
+
+if (!args.length) help(1)
+
+clint.on('--help', function(){
+	help(0)
+})
+
+clint.on('--version', function(){
 	console.log("\n  " + json.version + "\n")
-	process.exit()
-}
+	process.exit(0)
+})
 
-if (parsed.require){
-	
-	parsed.require.forEach(function(require){
-		wrup.require(require)
-	})
-	
+var modname, pass = false
+
+clint.on('--module', function(required){
+	if (!modname){
+		modname = required
+	} else {
+		pass = true
+		wrup.module(modname, required)
+		modname = null
+	}
+})
+
+clint.on('--package', function(required){
+	pass = true
+	wrup.package(required)
+})
+
+var options = {}
+
+clint.on('--wrup', function(result){
+	options.wrup = result;
+})
+
+clint.on('--globalize', function(result){
+	options.globalize = result;
+})
+
+clint.on('--compress', function(result){
+	options.compress = result;
+})
+
+var fileName;
+
+clint.on('--output', function(fn){
+	fileName = fn
+})
+
+clint.on('complete', function(){
+
+	if (!pass) help(1)
+
 	var result
-	var opts = {}
-	
-	try {
-		result = wrup.up({globalize: parsed.globalize, compress: parsed.compress, wrup: parsed.wrup})
-	} catch(err){
-		console.warn("\n  there was a problem parsing your javascripts. " + err + "\n")
+
+
+	result = wrup.up(options)
+
+	if (result){
+
+		if (fileName){
+			fs.writeFileSync(fileName, result)
+			console.warn("  the file " + fileName + " has been written.\n")
+		} else {
+			console.warn("")
+			console.log(result)
+			console.warn("")
+		}
+
+		process.exit(0)
+
+	} else {
+		console.error("")
 		process.exit(1)
 	}
 
-	if (parsed.output){
-		fs.writeFileSync(parsed.output, result)
-		console.warn("  the file " + parsed.output + " has been written.\n")
-	} else {
-		console.warn("\n  ######################################################################################\n")
-		console.log(result)
-		console.warn("\n  ######################################################################################\n")
-		console.warn("  enjoy.\n")
-	}
+})
 
-}
-
+clint.parse(args)

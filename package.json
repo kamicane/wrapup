@@ -16,7 +16,7 @@
 		"url": "https://github.com/kamicane/wrapup.git"
 	},
 	"dependencies": {
-		"semver": ">=1.0.13",
+		"clint": ">=0.0.3",
 		"uglify-js": ">=1.2.5"
 	}
 }
