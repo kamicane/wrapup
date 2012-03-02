@@ -1,5 +1,4 @@
 var cache = {}, require = function(id){
-	if (id == null) return null
 	var module
 	if (module = cache[id]) return module.exports
 	module = cache[id] = {exports: {}}
