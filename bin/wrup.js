@@ -5,7 +5,6 @@ var wrup = require("../lib/main")(),
 	fs = require("fs"),
 	json = require("../package")
 
-
 // consolize wrup errors
 
 wrup.on("error:js", function(module, from, err){
