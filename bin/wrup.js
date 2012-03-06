@@ -57,11 +57,11 @@ clint.command('--version',
              '-v', 'prints the version number.')
 
 clint.command('--module', '-m',
-             'a manually named module to require, accepts a single path or path and namespace. `-m path/to/moofx3 fx` and `-m path/to/othermodule`')
+             'one module to require, accepts one path or one path and one namespace. `-m path/to/x` or `-m path/to/x y`')
 
 clint.command('--package', '-p',
              'valid package / packages to require, accepts multiple paths.' +
-             ' `-p` for cwd(), or `-p path/to/package` or `-p path/to/package1 path/to/package2 path/to/package3 ...`')
+             ' `-p` for cwd(), or `-p path/to/package` or `-p p/t/package1 p/t/package2 ...`')
 
 clint.command('--compress', '-c',
              'compresses output using uglify-js mangle and squeeze. defaults to no|false, `-c` or `-c yes` to enable.', specify)
