@@ -57,7 +57,7 @@ Like --packages modules are resolved automatically by node, so you can cherry-pi
 wrup --module moofx/lib/color
 ```
 
-You can also assign a custom namespace, especially useful when requiring modules that are indexes or mains.
+You can also assign a custom namespace, especially useful when requiring modules that are indices or mains.
 
 ```
 wrup --module ~/projects/moofx/lib/main.js moofx
