@@ -3,51 +3,17 @@
 var wrup = require("../lib/main")(),
 	clint = require("clint")(),
 	fs = require("fs"),
+	colors = require("colors"),
 	json = require("../package")
 
 // consolize wrup errors
 
-wrup.on("error:js", function(module, from, err){
-	console.error("  ERROR: the module %s required by %s had a javascript error: %j", module, from || 'you', err)
-})
-
-wrup.on("error:resolve", function(module, from){
-	console.error("  ERROR: the module %s required by %s could not be resolved", module, from || 'you')
-})
-
-wrup.on("error:native", function(module, from){
-	console.error("  ERROR: the module %s required by %s is a native require", module, from || 'you')
-})
-
-wrup.on("error:package", function(pkg){
-	console.error("  ERROR: the package %s could not be resolved", pkg)
-})
-
-wrup.on("error:namespace", function(namespace){
-	console.error("  ERROR: the namespace %s was already in use", namespace)
-})
-
-wrup.on("warning:access", function(){
-	console.error("  WARNING: both --globalize and --wrup are turned off, you might not be able to access the required modules")
-})
-
-wrup.on("error:empty", function(){
-	console.error("  ERROR: no modules required")
-})
-
-wrup.on("error:internal", function(err){
-	console.error("  ERROR: kami, fix WrapUp because it doesnt work: %j", err)
-})
-
-// header
-
-console.warn("   , , , __  __.  _   . . _  ")
-console.warn("  (_(_/_/ (_(_/|_/_)_(_/_/_)_")
-console.warn("                /       /  " + json.version + "\n")
+wrup.log("ERROR".red.inverse + ": ")
 
 var specify = function(value){
 	if (value === 'no' || value === 'false') return false
-	return true
+	if (value === 'yes' || value === 'true') return true
+	return value
 }
 
 clint.command('--help', '-h',
@@ -57,26 +23,31 @@ clint.command('--version',
              '-v', 'prints the version number.')
 
 clint.command('--module', '-m',
-             'one module to require, accepts one path or one path and one namespace. `-m path/to/x` or `-m path/to/x y`')
+             'one module to require, accepts one path or one path and one namespace. ' + '-m path/to/x'.green + ' or ' + '-m path/to/x y'.green)
 
 clint.command('--package', '-p',
              'valid package / packages to require, accepts multiple paths.' +
-             ' `-p` for cwd(), or `-p path/to/package` or `-p p/t/package1 p/t/package2 ...`')
+             ' ' + '-p'.green + ' for cwd(), or ' + '-p path/to/package'.green + ' or ' + '-p p/t/package1 p/t/package2'.green + ' ...')
 
 clint.command('--compress', '-c',
-             'compresses output using uglify-js mangle and squeeze. defaults to no|false, `-c` or `-c yes` to enable.', specify)
+             'compresses output using uglify-js mangle and squeeze. defaults to no|false, ' + '-c'.green + ' or ' + '-c yes'.green + ' to enable.', specify)
 
 clint.command('--wrup', '-w',
-             'includes the wrup client, to retrieve required namespaces with `wrup(namespace)`. defaults to no|false, `-w yes` to enable.', specify)
+             'includes the wrup client, to retrieve required namespaces with ' + 'wrup(namespace)' + '. defaults to no|false, ' + '-w yes'.green + ' to enable.', specify)
 
 clint.command('--globalize', '-g',
-             'defined namespaces go to global scope. defaults to yes|true, `-g no` to disable.', specify)
+             'defined namespaces go to global scope. defaults to yes|true, ' + '-g no'.green + ' to disable.', specify)
 
 clint.command('--output', '-o',
-             'wraps up the contents of your required modules to the specified filename, instead of stdout. `-o path/to/file`')
+             'wraps up the contents of your required modules to the specified filename, instead of stdout. ' + '-o path/to/file'.green)
 
 var help = function(err){
-	console.log(clint.help())
+	// header
+	console.warn(" , , , __  __.  _   . . _  ".white)
+	console.warn("(_(_/_/ (_(_/|_/_)_(_/_/_)_".grey)
+	console.warn("              /       /  " + json.version.white + "\n")
+
+	console.log(clint.help(2, " : ".grey))
 	process.exit(err)
 }
 
@@ -89,7 +60,7 @@ clint.on('command(--help)', function(){
 })
 
 clint.on('command(--version)', function(){
-	console.log("\n  " + json.version + "\n")
+	console.log(json.version)
 	process.exit(0)
 })
 
@@ -108,7 +79,7 @@ clint.on('command(--package)', function(required){
 var options = {}
 
 clint.on('command(--wrup)', function(result){
-	options.wrup = result;
+	options.wrup = result == null ? true : result;
 })
 
 clint.on('command(--globalize)', function(result){
@@ -138,16 +109,15 @@ clint.on('complete', function(){
 
 		if (fileName){
 			fs.writeFileSync(fileName, result)
-			console.warn("  DONE: the file " + fileName + " has been written.\n")
+			console.warn("DONE".green.inverse + ": the file " + fileName.grey + " has been written")
 		} else {
 			console.log(result)
-			console.warn("\n  DONE.\n")
+			console.warn("DONE".green.inverse)
 		}
 
 		process.exit(0)
 
 	} else {
-		console.error("")
 		process.exit(1)
 	}
 
