@@ -1,7 +1,7 @@
 {
 	"name": "wrapup",
 	"description": "wraps up node packages for web development",
-	"version": "0.9.2",
+	"version": "0.9.2-dev",
 	"license": "MIT (http://mootools.net/license.txt)",
 	"main": "./lib/main.js",
 	"bin" : {
@@ -16,8 +16,9 @@
 		"url": "https://github.com/kamicane/wrapup.git"
 	},
 	"dependencies": {
-		"clint": "=0.0.4",
-		"emi": "=0.0.3",
-		"uglify-js": ">=1.2.5"
+		"colors": "*",
+		"clint": "0.0.4",
+		"emi": "0.0.3",
+		"uglify-js": "1.2.x"
 	}
 }
