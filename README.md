@@ -31,7 +31,7 @@ When requiring a package, node looks inside the node_modules folders. If you hav
 wrup --package moofx
 ```
 
-and if you also installed emi, this will also work:
+If you also installed emi, this will also work:
 
 ```
 wrup --package moofx emi
@@ -51,19 +51,19 @@ This is how you wrapup a random module. window.color (if --globalize is true) wi
 wrup --module ~/projects/moofx/lib/color.js
 ```
 
-Like --packages modules are resolved automatically by node, so you can cherry-pick easily:
+Like packages, modules are resolved automatically by node, so you can cherry-pick easily:
 
 ```
 wrup --module moofx/lib/color
 ```
 
-You can also assign a custom namespace, especially useful when requiring modules that are indices or mains.
+You can also assign a custom namespace, especially useful when requiring modules that are indices or mains:
 
 ```
 wrup --module ~/projects/moofx/lib/main.js moofx
 ```
 
-which is equivalent of
+...which is equivalent of
 
 ```
 wrup --package ~/projects/moofx
