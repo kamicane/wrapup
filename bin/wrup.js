@@ -1,14 +1,10 @@
 #!/usr/bin/env node
 
-var wrup = require("../lib/main")(),
+var WrapUp = require("../lib/wrapup"),
 	clint = require("clint")(),
 	fs = require("fs"),
 	colors = require("colors"),
 	json = require("../package")
-
-// consolize wrup errors
-
-wrup.log("ERROR".red.inverse + ": ")
 
 var specify = function(value){
 	if (value === 'no' || value === 'false') return false
@@ -40,6 +36,9 @@ clint.command('--globalize', '-g',
 
 clint.command('--output', '-o',
              'wraps up the contents of your required modules to the specified filename, instead of stdout. ' + '-o path/to/file'.green)
+			 
+clint.command('--xclude', '-x')
+			 
 
 var help = function(err){
 	// header
@@ -59,6 +58,12 @@ clint.on('command(--help)', function(){
 	help(0)
 })
 
+var excludes = []
+
+clint.on('command(--xclude)', function(x){
+	excludes.push(x)
+})
+
 clint.on('command(--version)', function(){
 	console.log(json.version)
 	process.exit(0)
@@ -66,14 +71,20 @@ clint.on('command(--version)', function(){
 
 var pass = false
 
+var modules = [],
+	namespaces = []
+
 clint.on('chunk(--module)', function(module, namespace){
 	pass = true
-	wrup.module(module, namespace)
+	modules.push(module)
+	namespaces.push(namespace)
 })
+
+var packages = []
 
 clint.on('command(--package)', function(required){
 	pass = true
-	wrup.package(required)
+	packages.push(required)
 })
 
 var options = {}
@@ -99,11 +110,26 @@ clint.on('command(--output)', function(fn){
 clint.on('complete', function(){
 
 	if (!pass) help(1)
-
-	var result
-
-
-	result = wrup.up(options)
+	
+	//initialize wrapup
+	var wrup = new WrapUp(excludes)
+	
+	// consolize wrup errors
+	wrup.log("ERROR".red.inverse + ": ")
+	
+	//build packages
+	packages.forEach(function(p){
+		wrup.package(p)
+	})
+	
+	//build modules
+	modules.forEach(function(m, i){
+		var ns = namespaces[i]
+		wrup.module(m, ns)
+	})
+	
+	//build result
+	var result = wrup.up(options)
 
 	if (result){
 
