@@ -3,7 +3,7 @@
 ## whatwrup?
 
 WrapUp compiles CommonJS 1.0 modules and / or packages for the browser.
-It does not try to have a working require implementation for the browser or anything for the sorts. The boilerplate that WrapUp uses is [incredibly simple](https://github.com/kamicane/wrapup/blob/master/includes/require.js).
+It does not try to have a working require implementation for the browser or anything of the sorts. The boilerplate that WrapUp uses is [incredibly simple](https://github.com/kamicane/wrapup/blob/master/includes/require.js).
 
 ## installation
 
