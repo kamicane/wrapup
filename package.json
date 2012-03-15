@@ -10,7 +10,9 @@
 	"keywords": ["wrap", "wrapper", "wrapup", "packager", "browser", "package manager"],
 	"homepage": "http://github.com/kamicane/wrapup",
 	"author": "Valerio Proietti <@kamicane> (http://mad4milk.net)",
-	"bugs": "https://github.com/kamicane/wrapup/issues",
+	"bugs": {
+		"url": "https://github.com/kamicane/wrapup/issues"
+	},
 	"repository": {
 		"type": "git",
 		"url": "https://github.com/kamicane/wrapup.git"
