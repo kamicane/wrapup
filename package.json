@@ -1,26 +1,38 @@
 {
-	"name": "wrapup",
-	"description": "wraps up node packages for web development",
-	"version": "0.9.3-beta",
-	"license": "MIT (http://mootools.net/license.txt)",
-	"main": "./lib/main.js",
-	"bin" : {
-		"wrup" : "./bin/wrup.js"
-	},
-	"keywords": ["wrap", "wrapper", "wrapup", "packager", "browser", "package manager"],
-	"homepage": "http://github.com/kamicane/wrapup",
-	"author": "Valerio Proietti <@kamicane> (http://mad4milk.net)",
-	"bugs": {
-		"url": "https://github.com/kamicane/wrapup/issues"
-	},
-	"repository": {
-		"type": "git",
-		"url": "https://github.com/kamicane/wrapup.git"
-	},
-	"dependencies": {
-		"colors": "*",
-		"clint": "0.0.5",
-        "prime": "0.0.4-alpha",
-		"uglify-js": "1.2.x"
-	}
+  "name": "wrapup",
+  "description": "wraps up node packages for web development",
+  "version": "0.9.4",
+  "license": "MIT (http://mootools.net/license.txt)",
+  "main": "./lib/main.js",
+  "bin": {
+    "wrup": "./bin/wrup.js"
+  },
+  "keywords": [
+    "wrap",
+    "wrapper",
+    "wrapup",
+    "packager",
+    "browser",
+    "package manager"
+  ],
+  "homepage": "http://github.com/kamicane/wrapup",
+  "author": "Valerio Proietti <@kamicane> (http://mad4milk.net)",
+  "bugs": {
+    "url": "https://github.com/kamicane/wrapup/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/kamicane/wrapup.git"
+  },
+  "dependencies": {
+    "colors": "*",
+    "clint": "0.0.5",
+    "prime": "0.0.4-alpha",
+    "uglify-js": "1.2.x"
+  },
+  "devDependencies": {},
+  "optionalDependencies": {},
+  "engines": {
+    "node": "*"
+  }
 }
