@@ -42,7 +42,7 @@ In a nutshell, you tell WrapUp you require `something`, it calculates dependenci
 
 The main WrapUp method is `require(namespace, module)`.
 
-It resolves a module using node's own modules and packages logic, so for instance, `wrup.require("colors")` would look in your `node_modules` folder for a package named colors, then proceed to load its `main`. The namespace parameter is optional, but it's used to expose the module to the browser. Without a namespace, the module will be required immediately without further action. Exactly like doing `var x = require(y)` vs `require(y)`.
+It resolves a module using node's own modules and packages logic, so for instance, `wrup.require("colors")` would look in your `node_modules` folder for a package named colors, then proceed to load its `main`. The namespace parameter is optional, but it's used to expose the module to the browser. Without a namespace, the module will be required without being assigned. A bit like doing `var x = require(y)` vs `require(y)`.
 
 #### cli
 
@@ -55,10 +55,19 @@ wrup --require colors colors --require someName ./path/to/otherModule --require 
 ```javascript
 var wrup = require("wrapup")() // require + instantiate
 
-wrup.require("colors", "colors").require("someName", "./path/to/otherModule").require("someOtherPackage").up(/*...options...*/) //returns a string
+wrup.require("colors", "colors")
+    .require("someName", "./path/to/otherModule")
+    .require("someOtherPackage")
+    .up(/*...options...*/) //returns a string
 ```
 
-the above would let you access colors and someName, while having someOtherPackage simply required without being assigned to any variable.
+the above would let you access colors and someName, while having someOtherPackage simply required without being assigned to any variable. The ouput code assigning variables would look like this:
+
+```javascript
+window.colors = colors
+window.someName = require(/*identifier*/)
+require(/*identifier*/)
+```
 
 ### Options
 
