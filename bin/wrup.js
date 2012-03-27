@@ -18,14 +18,6 @@ clint.command('--help', '-h',
 clint.command('--version',
              '-v', 'prints the version number.')
 
-// clint.command('--module', '-m',
-//              'one module to require, accepts one path or one path and one namespace. ' + '-m path/to/x'.green + ' or ' + '-m path/to/x y'.green)
-//
-// clint.command('--package', '-p',
-//              'valid package / packages to require, accepts multiple paths.' +
-//              ' ' + '-p'.green + ' for cwd(), or ' + '-p path/to/package'.green + ' or ' + '-p p/t/package1 p/t/package2'.green + ' ...')
-
-
 clint.command('--require', '-r', 'requires a module with a namespace. uses node to resolve modules.' +
               ' -r namespace path/to/module'.green + ' or' + ' -r path/to/module'.green)
 
