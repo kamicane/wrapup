@@ -1,7 +1,7 @@
 {
   "name": "wrapup",
   "description": "wraps up node packages for web development",
-  "version": "0.9.5",
+  "version": "0.9.6",
   "license": "MIT (http://mootools.net/license.txt)",
   "main": "./lib/main.js",
   "bin": {
@@ -29,11 +29,12 @@
     "colors": "*",
     "clint": "0.0.6",
     "prime": "0.0.5-alpha",
-    "uglify-js": "1.2.x"
+    "uglify-js": "1.2.x",
+    "graphviz": "0.0.x"
   },
   "devDependencies": {},
   "optionalDependencies": {
-      "graphviz": "0.0.x"
+    "graphviz": "0.0.x"
   },
   "engines": {
     "node": "*"
