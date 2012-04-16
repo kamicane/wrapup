@@ -26,12 +26,14 @@
   },
   "dependencies": {
     "colors": "*",
-    "clint": "0.0.5",
-    "prime": "0.0.4-alpha",
+    "clint": "0.0.6",
+    "prime": "0.0.5-alpha",
     "uglify-js": "1.2.x"
   },
   "devDependencies": {},
-  "optionalDependencies": {},
+  "optionalDependencies": {
+      "graphviz": "0.0.x"
+  },
   "engines": {
     "node": "*"
   }
