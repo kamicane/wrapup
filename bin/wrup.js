@@ -1,12 +1,13 @@
 #!/usr/bin/env node
 
 var WrapUp = require("../lib/wrapup"),
-    clint = require("clint")(),
-    fs = require("fs"),
+    clint  = require("clint")(),
+    fs     = require("fs"),
     colors = require("colors"),
-    json = require("../package")
+    json   = require("../package"),
+    path   = require("path")
 
-var specify = function(value){
+var bool = function(value){
     if (value === 'no' || value === 'false') return false
     if (value === 'yes' || value === 'true') return true
     return value
@@ -15,25 +16,32 @@ var specify = function(value){
 clint.command('--help', '-h',
              'general usage information.')
 
-clint.command('--version',
-             '-v', 'prints the version number.')
+clint.command('--version', '-v',
+              'prints the version number.')
 
-clint.command('--require', '-r', 'requires a module with a namespace. uses node to resolve modules.' +
+clint.command('--require', '-r',
+              'requires a module with a namespace. uses node to resolve modules.' +
               ' -r namespace path/to/module'.green + ' or' + ' -r path/to/module'.green)
 
 clint.command('--compress', '-c',
-             'compresses output using uglify-js mangle and squeeze. defaults to no|false, ' + '-c'.green + ' or ' + '-c yes'.green + ' to enable', specify)
+             'compresses output using uglify-js mangle and squeeze. defaults to no|false, ' +
+             '-c'.green + ' or ' + '-c yes'.green + ' to enable', bool)
 
-clint.command('--wrup', '-w',
-             'includes the wrup client, to retrieve required namespaces with ' + 'wrup(namespace)' + '. defaults to no|false, ' + '-w yes'.green + ' to enable', specify)
+clint.command('--wrup', null,
+             'includes the wrup client, to retrieve required namespaces with ' +
+             'wrup(namespace)' + '. defaults to no|false, ' + '--wrup yes'.green + ' to enable', bool)
 
 clint.command('--globalize', '-g',
-             'defined namespaces go to global scope. defaults to yes|true, ' + '-g no'.green + ' to disable', specify)
+             'defined namespaces go to global scope. defaults to yes|true, ' + '-g no'.green + ' to disable', bool)
 
 clint.command('--output', '-o',
              'wraps up the contents of your required modules to the specified filename, instead of stdout. ' + '-o path/to/file'.green)
 
+clint.command('--watch', '-w',
+              'watches changes to every resolved module and wraps up', bool)
+
 clint.command('--xclude', '-x')
+clint.command('--digraph', '-dg')
 
 
 var help = function(err){
@@ -50,71 +58,77 @@ var args = process.argv.slice(2)
 
 if (!args.length) help(1)
 
-clint.on('command(--help)', function(){
-    help(0)
-})
-
-clint.on('command(--version)', function(){
-    console.log(json.version)
-    process.exit(0)
-})
-
  //initialize wrapup
+
 var wrup = new WrapUp()
+
 // consolize wrup errors
+
 wrup.log("ERROR".red.inverse + ": ")
 
 var pass = false
 
-clint.on('chunk(--require)', function(namespace, module){
-    pass = true
-    wrup.require(namespace, module)
+// parse require chunk
+
+clint.on('chunk', function(name){
+
+    if (name === "--require"){
+        pass = true
+        wrup.require(arguments[1], arguments[2])
+    }
+
 })
 
-clint.on('command(--xclude)', function(x){ wrup.exclude(x) })
+var options = {}, fileName
 
-var options = {}
+// parse other options
 
-clint.on('command(--wrup)', function(result){
-    options.wrup = result == null ? true : result;
-})
+clint.on("command", function(name, value){
 
-clint.on('command(--globalize)', function(result){
-    options.globalize = result;
-})
+    switch (name){
 
-clint.on('command(--compress)', function(result){
-    options.compress = result;
-})
+        case "--help"      : help(0);                                      break
+        case "--version"   : console.log(json.version); process.exit(0);   break
+        case "--xclude"    : if (value != null) wrup.exclude(value);       break
+        case "--digraph"   : options.graph = value;                        break
+        case "--wrup"      : options.wrup = value == null ? true : value;  break
+        case "--globalize" : options.globalize = value;                    break
+        case "--compress"  : options.compress = true;                      break
+        case "--watch"     : options.watch = value == null ? true : value; break
+        case "--output"    : fileName = value;                             break
 
-var fileName;
+    }
 
-clint.on('command(--output)', function(fn){
-    fileName = fn
 })
 
 clint.on('complete', function(){
 
     if (!pass) help(1)
 
-    //build result
-    var result = wrup.up(options)
+    if (!fileName) options.watch = false
 
-    if (result){
+    wrup.on("change", function(fullpath){
+        console.warn("=>".blue.inverse + " " + path.relative(process.cwd(), fullpath).grey + " was changed")
+    })
 
+    wrup.on("done", function(js){
         if (fileName){
-            fs.writeFileSync(fileName, result)
+
+            fs.writeFileSync(fileName, js)
             console.warn("DONE".green.inverse + ": the file " + fileName.grey + " has been written")
+
         } else {
-            console.log(result)
+
+            console.log(js)
             console.warn("DONE".green.inverse)
+
         }
+    })
 
-        process.exit(0)
+    wrup.up(options)
 
-    } else {
-        process.exit(1)
-    }
+    if (!options.watch) process.exit(0)
+
 
 })
 
