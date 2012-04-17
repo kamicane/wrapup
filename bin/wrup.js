@@ -41,7 +41,7 @@ clint.command('--watch', '-w',
               'watches changes to every resolved module and wraps up', bool)
 
 clint.command('--xclude', '-x')
-clint.command('--digraph', '-dg')
+clint.command('--digraph', '-dg', bool)
 
 
 var help = function(err){
@@ -90,12 +90,12 @@ clint.on("command", function(name, value){
         case "--help"      : help(0);                                      break
         case "--version"   : console.log(json.version); process.exit(0);   break
         case "--xclude"    : if (value != null) wrup.exclude(value);       break
-        case "--digraph"   : options.graph = value;                        break
+        case "--digraph"   : options.graph = value == null ? true : value; break
         case "--wrup"      : options.wrup = value == null ? true : value;  break
         case "--globalize" : options.globalize = value;                    break
         case "--compress"  : options.compress = true;                      break
         case "--watch"     : options.watch = value == null ? true : value; break
-        case "--output"    : fileName = value;                             break
+        case "--output"    : options.output = value || false;              break
 
     }
 
@@ -105,21 +105,21 @@ clint.on('complete', function(){
 
     if (!pass) help(1)
 
-    if (!fileName) options.watch = false
+    if (!options.output) options.watch = false
 
     wrup.on("change", function(fullpath){
         console.warn("=>".blue.inverse + " " + path.relative(process.cwd(), fullpath).grey + " was changed")
     })
 
-    wrup.on("done", function(js){
-        if (fileName){
+    wrup.on("done", function(data){
 
-            fs.writeFileSync(fileName, js)
-            console.warn("DONE".green.inverse + ": the file " + fileName.grey + " has been written")
+        if (options.output){
+
+            console.warn("DONE".green.inverse + ": the file " + options.output.grey + " has been written")
 
         } else {
 
-            console.log(js)
+            console.log(data)
             console.warn("DONE".green.inverse)
 
         }
