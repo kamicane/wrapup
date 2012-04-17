@@ -33,9 +33,7 @@
     "graphviz": "0.0.x"
   },
   "devDependencies": {},
-  "optionalDependencies": {
-    "graphviz": "0.0.x"
-  },
+  "optionalDependencies": {},
   "engines": {
     "node": "*"
   }
