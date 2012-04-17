@@ -2,7 +2,6 @@
 
 var WrapUp = require("../lib/wrapup"),
     clint  = require("clint")(),
-    fs     = require("fs"),
     colors = require("colors"),
     json   = require("../package"),
     path   = require("path")
