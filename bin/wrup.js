@@ -40,7 +40,7 @@ clint.command('--watch', '-w',
               'watches changes to every resolved module and wraps up', bool)
 
 clint.command('--xclude', '-x')
-clint.command('--digraph', '-dg', bool)
+clint.command('--digraph', '-dg', null, bool)
 
 
 var help = function(err){
