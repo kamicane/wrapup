@@ -128,7 +128,6 @@ clint.on('complete', function(){
 
     if (!options.watch) process.exit(0)
 
-
 })
 
 clint.parse(args)
