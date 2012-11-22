@@ -36,6 +36,9 @@ clint.command('--globalize', '-g',
 clint.command('--output', '-o',
              'wraps up the contents of your required modules to the specified filename, instead of stdout. ' + '-o path/to/file'.green)
 
+clint.command('--source-map', '-m',
+             'write a sourcemap to a file' + '-m path/to/file.map'.green)
+
 clint.command('--watch', '-w',
               'watches changes to every resolved module and wraps up', bool)
 
@@ -86,15 +89,16 @@ clint.on("command", function(name, value){
 
     switch (name){
 
-        case "--help"      : help(0);                                      break
-        case "--version"   : console.log(json.version); process.exit(0);   break
-        case "--xclude"    : if (value != null) wrup.exclude(value);       break
-        case "--digraph"   : options.graph = value == null ? true : value; break
-        case "--wrup"      : options.wrup = value == null ? true : value;  break
-        case "--globalize" : options.globalize = value;                    break
-        case "--compress"  : options.compress = true;                      break
-        case "--watch"     : options.watch = value == null ? true : value; break
-        case "--output"    : options.output = value || false;              break
+        case "--help"       : help(0);                                      break
+        case "--version"    : console.log(json.version); process.exit(0);   break
+        case "--xclude"     : if (value != null) wrup.exclude(value);       break
+        case "--digraph"    : options.graph = value == null ? true : value; break
+        case "--wrup"       : options.wrup = value == null ? true : value;  break
+        case "--globalize"  : options.globalize = value;                    break
+        case "--compress"   : options.compress = true;                      break
+        case "--watch"      : options.watch = value == null ? true : value; break
+        case "--output"     : options.output = value || false;              break
+        case "--source-map" : options.sourcemap = value || false;           break
 
     }
 
