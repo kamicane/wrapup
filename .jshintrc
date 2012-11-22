@@ -1,5 +1,7 @@
 {
 	"asi": true,
-	"eqeqeq": true,
-	"eqnull": true
+	"eqeqeq": false,
+	"eqnull": true,
+	"loopfunc": true,
+	"boss": true
 }
