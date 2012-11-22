@@ -1,3 +1,5 @@
 {
-	"asi": true
+	"asi": true,
+	"eqeqeq": true,
+	"eqnull": true
 }
