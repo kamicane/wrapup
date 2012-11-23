@@ -3,5 +3,6 @@
 	"eqeqeq": false,
 	"eqnull": true,
 	"loopfunc": true,
-	"boss": true
+	"boss": true,
+	"node": true
 }
