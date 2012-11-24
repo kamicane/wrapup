@@ -1,2 +1,4 @@
 
-module.exports = "d"
+function foo(){
+	require("./e")
+}

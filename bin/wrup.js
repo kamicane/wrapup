@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+"use strict";
 
 var WrapUp = require("../lib/wrapup"),
     clint  = require("clint")(),
@@ -70,10 +71,6 @@ if (!args.length) help(1)
 
 var wrup = new WrapUp()
 
-// consolize wrup errors
-
-wrup.log("ERROR".red.inverse + ": ")
-
 var pass = false
 
 // parse require chunk
@@ -99,7 +96,6 @@ clint.on("command", function(name, value){
         case "--version"         : console.log(json.version); process.exit(0);   break
         case "--xclude"          : if (value != null) wrup.exclude(value);       break
         case "--digraph"         : options.graph = value == null ? true : value; break
-        case "--wrup"            : options.wrup = value == null ? true : value;  break
         case "--globalize"       : options.globalize = value;                    break
         case "--compress"        : options.compress = true;                      break
         case "--watch"           : options.watch = value == null ? true : value; break
@@ -118,27 +114,30 @@ clint.on('complete', function(){
 
     if (!options.output) options.watch = false
 
+    wrup.options(options)
+
     wrup.on("change", function(fullpath){
         console.warn("=>".blue.inverse + " " + path.relative(process.cwd(), fullpath).grey + " was changed")
     })
 
-    wrup.on("done", function(data){
-
-        if (options.output){
-
+    wrup.on("end", function(err, data){
+        if (err){
+            throw err
+        } else if (options.output){
             console.warn("DONE".green.inverse + ": the file " + options.output.grey + " has been written")
-
         } else {
-
             console.log(data)
             console.warn("DONE".green.inverse)
-
         }
     })
 
-    wrup.up(options)
+    wrup.on("warn", function(err){
+        console.error(err.message.red)
+    })
 
-    if (!options.watch) process.exit(0)
+    if (options.graph) wrup.graph()
+    else if (options.watch) wrup.watch()
+    else wrup.up()
 
 })
 
