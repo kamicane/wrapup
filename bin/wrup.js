@@ -120,10 +120,8 @@ clint.on('complete', function(){
         console.warn("=>".blue.inverse + " " + path.relative(process.cwd(), fullpath).grey + " was changed")
     })
 
-    wrup.on("end", function(err, data){
-        if (err){
-            throw err
-        } else if (options.output){
+    wrup.on("end", function(data){
+        if (options.output){
             console.warn("DONE".green.inverse + ": the file " + options.output.grey + " has been written")
         } else {
             console.log(data)
@@ -135,9 +133,13 @@ clint.on('complete', function(){
         console.error(err.message.red)
     })
 
-    if (options.graph) wrup.graph()
+    var error = function(err){
+        if (err) throw err
+    }
+
+    if (options.graph) wrup.graph(error)
     else if (options.watch) wrup.watch()
-    else wrup.up()
+    else wrup.up(error)
 
 })
 
