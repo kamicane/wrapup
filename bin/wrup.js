@@ -110,7 +110,10 @@ clint.on('complete', function(){
 
     if (!pass) help(1)
 
-    if (!options.output) options.watch = false
+    if (!options.output){
+        options.watch = false
+        wrup.pipe(process.stdout)
+    }
 
     wrup.options(options)
 
@@ -133,8 +136,6 @@ clint.on('complete', function(){
     wrup.on("error", function(err){
         console.error("FATAL:".red.inverse + " " + err.message.red)
     })
-
-    if (!options.output) wrup.pipe(process.stdout)
 
     if (options.graph) wrup.graph()
     else if (options.watch) wrup.watch()

@@ -27,3 +27,5 @@ exports.test = function(test){
 }
 
 require('./pipe')
+require('./globalize')
+require('./notresolved')
