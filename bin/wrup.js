@@ -118,11 +118,10 @@ clint.on('complete', function(){
         console.warn("=>".blue.inverse + " " + path.relative(process.cwd(), fullpath).grey + " was changed")
     })
 
-    wrup.on("end", function(data){
+    wrup.on("end", function(){
         if (options.output){
             console.warn("DONE".green.inverse + ": the file " + options.output.grey + " has been written")
         } else {
-            console.log(data)
             console.warn("DONE".green.inverse)
         }
     })
@@ -131,13 +130,15 @@ clint.on('complete', function(){
         console.error(err.message.red)
     })
 
-    var error = function(err){
-        if (err) throw err
-    }
+    wrup.on("error", function(err){
+        console.error("FATAL:".red.inverse + " " + err.message.red)
+    })
 
-    if (options.graph) wrup.graph(error)
+    if (!options.output) wrup.pipe(process.stdout)
+
+    if (options.graph) wrup.graph()
     else if (options.watch) wrup.watch()
-    else wrup.up(error)
+    else wrup.up()
 
 })
 

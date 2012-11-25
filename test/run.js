@@ -25,3 +25,5 @@ exports.test = function(test){
     assert.equal(resultCode, shouldCode, relative(result) + " and " + relative(should) + " should be the same")
     console.log(("✔ " + test + " test passed").green)
 }
+
+require('./pipe')
