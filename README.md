@@ -59,26 +59,31 @@ var wrup = require("wrapup")() // require + instantiate
 wrup.require("colors", "colors")
     .require("someName", "./path/to/otherModule")
     .require("someOtherPackage")
-    .up(/*...options...*/) //returns a string
+    .options(/*...options...*/)
+    .up(function(err, js){
+        console.log(js)
+    })
 ```
 
 the above would let you access colors and someName, while having someOtherPackage simply required without being assigned to any variable. The ouput code assigning variables would look like this:
 
 ```javascript
-window.colors = colors
-window.someName = require(/*identifier*/)
-require(/*identifier*/)
+window.colors = require("colors")
+window.someName = require("someName")
+require("someOtherPackage")
 ```
 
 ### watch
 
 WrapUp supports watching source files and rebuilds automatically whenever one of these changes.
 
+Instead of using the `.up()` method, the `.watch()` method is used.
+
 ```javascript
 var wrup = require("wrapup")() // require + instantiate
-wrup.require("y", "./moduley.js").up({watch: true})
+wrup.require("y", "./moduley.js").watch()
 
-wrup.on("done", function(js){
+wrup.on("data", function(js){
     fs.writeFile("path/to/wherever", js)
 })
 
@@ -87,29 +92,61 @@ wrup.on("change", function(file){
 })
 ```
 
-In the above example, whenever moduley and any module required by moduley changes, .up() is called again.
-The `done` event is fired whenever WrapUp builds, either be a direct .up() call or an .up() call triggered by a changed file.
+In the above example, whenever module y and any module required by module y changes, .up() is called again.
+The `data` event is fired whenever WrapUp builds, either be a direct .up() call or an .up() call triggered by a changed file.
 The `change` event is fired whenever `watch` is set to true and one of the source files changes.
 
 
 ### Options
 
- - `globalize` if set to true, will attach namespaces to the `window` object. Defaults to true.
+ - `globalize` define the global scope where named modules are attached to. Defaults to window.
  - `compress` if set to true, will compress the resulting javascript file using uglify-js. Defaults to false.
- - `wrup` if set to true, will attach the wrup method to the window object, allowing you to sort-of-require _the specified namespaces_ at any given time. This is especially useful since modules are only executed when first required, and sometimes might be a good idea to execute a module only when the dom is fully loaded, for instance, or conditionally. Defaults to false.
  - `watch` if set to true, will watch required files and rebuilds automatically whenever one of these changes. The `--watch` option in the cli requires the `--output` option to be set as well. defaults to false.
  - `--output` only available in the cli, used to specify an output file. defaults to stdout.
+ - `--source-map` Specify an output file where to generate source map.
+ - `--source-map-root` The path to the original source to be included in the source map.
+ - `--in-source-map` Input source map, useful if you're compressing JS that was generated from some other original code.
 
 #### cli
 
 ```
-wrup --require ... --globalize yes --wrup no --compress yes --output path/to/file --watch
+wrup --require ... --globalize MyNameSpace --compress --output path/to/file.js --watch
 ```
 
 #### js
 
 ```javascript
-wrup.require(/*...*/).up({globalize: true, wrup: false, compress: true, watch: true})
+wrup.require(/*...*/)
+    .require(/*...*/)
+    .options({
+        globalize: "MyNameSpace",
+        compress: true,
+        sourcemap: "./somefile.map"
+    }).on("data", function(js){
+        fs.writeFile("./somefile.js", js)
+    }).up()
+```
+
+### Using Source Maps
+
+WrapUp utilizes UglifyJS internally to create source-maps, and has the same
+options, `--source-map`, `--source-map-root` and `--in-source-map`.
+
+Once the `.map` file is created, the page with the JavaScript can be opened. It
+is important that the original files are accessible through http too. For example
+when using `--require ./test/a --source-map test.map --source-map-root
+http://foo.com/src` the file `http://foo.com/src/test/a.js` should be the
+original JavaScript module.
+
+### Using with Uglify-JS
+
+The WrapUp output can be piped into UglifyJS if more compression options are
+desired. For example using the `--define` option to set global definitions.
+
+```
+wrup -r ./main.js --source-map ./main.map \
+     | uglify -d DEV=false --compress --mangle --output ./main.min.js \
+              --source-map main.map --in-source-map main.map
 ```
 
 ### Examples

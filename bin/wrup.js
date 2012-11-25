@@ -27,31 +27,29 @@ clint.command('--compress', '-c',
              'compresses output using uglify-js mangle and squeeze. defaults to no|false, ' +
              '-c'.green + ' or ' + '-c yes'.green + ' to enable', bool)
 
-clint.command('--wrup', null,
-             'includes the wrup client, to retrieve required namespaces with ' +
-             'wrup(namespace)' + '. defaults to no|false, ' + '--wrup yes'.green + ' to enable', bool)
-
 clint.command('--globalize', '-g',
-             'defined namespaces go to global scope. defaults to yes|true, ' + '-g no'.green + ' to disable', bool)
+             'define the global scope where named modules are attached to. Defaults to window, ' +
+             '-g MyNameSpace'.green)
+
 
 clint.command('--output', '-o',
              'wraps up the contents of your required modules to the specified filename, instead of stdout. ' + '-o path/to/file'.green)
 
+clint.command('--watch', '-w',
+              'watches changes to every resolved module and wraps up', bool)
+
 clint.command('--source-map', null,
-             'write a sourcemap to a file' + '-m path/to/file.map'.green)
+             'write a sourcemap to a file ' + '--source-map path/to/file.map'.green)
 
 clint.command('--source-map-root', null,
-             'the path to the original source to be included in the source map')
+             'the path to the original source to be included in the source map ' +
+             '--source-map-root http://localhost/src'.green)
 
 clint.command('--in-source-map', null,
              "input source map, useful if you're compressing JS that was generated from some other original code")
 
-clint.command('--watch', '-w',
-              'watches changes to every resolved module and wraps up', bool)
-
 clint.command('--xclude', '-x')
 clint.command('--digraph', '-dg', null, bool)
-
 
 var help = function(err){
     // header
