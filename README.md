@@ -149,6 +149,23 @@ wrup -r ./main.js --source-map ./main.map \
               --source-map main.map --in-source-map main.map
 ```
 
+### Stream and pipe
+
+WrapUp implements Node [Stream](http://nodejs.org/api/stream.html#stream_readable_stream)
+which means it is possible to pipe the WrapUp output to other writable streams,
+like [fs.WriteStream](http://nodejs.org/api/fs.html#fs_fs_writestream),
+process.stdout or
+[http.ServerResponse](http://nodejs.org/api/http.html#http_class_http_serverresponse).
+
+```js
+http.createServer(function(req, res){
+    var wrup = wrapup()
+    wrup.require('prime')
+    wrup.pipe(res)
+    wrup.up()
+})
+```
+
 ### Examples
 
 coming soon... :)
