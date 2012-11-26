@@ -17,16 +17,21 @@ var relative = function(file){
     return path.relative(process.cwd(), file)
 }
 
+exports.passed = function(test){
+    console.log(("✔ " + test + " test passed").green)
+}
+
 exports.test = function(test){
     var result = __dirname + '/output/' + test + '.result.js'
     var should = __dirname + '/output/' + test + '.js'
     var resultCode = parseAndWrite(result)
     var shouldCode = parseAndWrite(should)
     assert.equal(resultCode, shouldCode, relative(result) + " and " + relative(should) + " should be the same")
-    console.log(("✔ " + test + " test passed").green)
+    exports.passed(test)
 }
 
 require('./up')
 require('./pipe')
 require('./globalize')
 require('./notresolved')
+require('./graph')
