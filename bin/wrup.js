@@ -45,6 +45,10 @@ clint.command('--source-map-root', null,
              'the path to the original source to be included in the source map ' +
              '--source-map-root http://localhost/src'.green)
 
+clint.command('--source-map-url', null,
+             'relative or absolute URL to find the source map file ' +
+             '--source-map-url http://localhost/js/wrup.map'.green)
+
 clint.command('--in-source-map', null,
              "input source map, useful if you're compressing JS that was generated from some other original code")
 
@@ -99,6 +103,7 @@ clint.on("command", function(name, value){
         case "--watch"           : options.watch = value == null ? true : value; break
         case "--output"          : options.output = value || false;              break
         case "--source-map"      : options.sourcemap = value || false;           break
+        case "--source-map-url"  : options.sourcemapURL = value || false;        break
         case "--source-map-root" : options.sourcemapRoot = value || false;       break
         case "--in-source-map"   : options.sourcemapIn = value || false;         break
 

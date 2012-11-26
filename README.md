@@ -99,11 +99,12 @@ The `change` event is fired whenever `watch` is set to true and one of the sourc
 
 ### Options
 
- - `globalize` define the global scope where named modules are attached to. Defaults to window.
- - `compress` if set to true, will compress the resulting javascript file using uglify-js. Defaults to false.
- - `watch` if set to true, will watch required files and rebuilds automatically whenever one of these changes. The `--watch` option in the cli requires the `--output` option to be set as well. defaults to false.
+ - `--globalize` define the global scope where named modules are attached to. Defaults to window.
+ - `--compress` if set to true, will compress the resulting javascript file using uglify-js. Defaults to false.
+ - `--watch` if set to true, will watch required files and rebuilds automatically whenever one of these changes. The `--watch` option in the cli requires the `--output` option to be set as well. defaults to false.
  - `--output` only available in the cli, used to specify an output file. defaults to stdout.
  - `--source-map` Specify an output file where to generate source map.
+ - `--source-map-url` `//@ sourceMappingURL` value, URL to the saved sourcemap file.
  - `--source-map-root` The path to the original source to be included in the source map.
  - `--in-source-map` Input source map, useful if you're compressing JS that was generated from some other original code.
 
