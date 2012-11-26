@@ -26,15 +26,19 @@
     "url": "git://github.com/kamicane/wrapup.git"
   },
   "dependencies": {
+    "async": "0.1",
     "colors": "*",
     "clint": "0.0.6",
     "prime": "0.0.5-alpha",
-    "uglify-js": "1.2.x",
+    "uglify-js": "2.2",
     "graphviz": "0.0.x"
   },
   "devDependencies": {},
   "optionalDependencies": {},
   "engines": {
-    "node": "*"
+    "node": ">=0.6"
+  },
+  "scripts": {
+    "test": "node ./test/run.js"
   }
 }

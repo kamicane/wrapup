@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+"use strict";
 
 var WrapUp = require("../lib/wrapup"),
     clint  = require("clint")(),
@@ -26,12 +27,10 @@ clint.command('--compress', '-c',
              'compresses output using uglify-js mangle and squeeze. defaults to no|false, ' +
              '-c'.green + ' or ' + '-c yes'.green + ' to enable', bool)
 
-clint.command('--wrup', null,
-             'includes the wrup client, to retrieve required namespaces with ' +
-             'wrup(namespace)' + '. defaults to no|false, ' + '--wrup yes'.green + ' to enable', bool)
-
 clint.command('--globalize', '-g',
-             'defined namespaces go to global scope. defaults to yes|true, ' + '-g no'.green + ' to disable', bool)
+             'define the global scope where named modules are attached to. Defaults to window, ' +
+             '-g MyNameSpace'.green)
+
 
 clint.command('--output', '-o',
              'wraps up the contents of your required modules to the specified filename, instead of stdout. ' + '-o path/to/file'.green)
@@ -39,9 +38,18 @@ clint.command('--output', '-o',
 clint.command('--watch', '-w',
               'watches changes to every resolved module and wraps up', bool)
 
+clint.command('--source-map', null,
+             'write a sourcemap to a file ' + '--source-map path/to/file.map'.green)
+
+clint.command('--source-map-root', null,
+             'the path to the original source to be included in the source map ' +
+             '--source-map-root http://localhost/src'.green)
+
+clint.command('--in-source-map', null,
+             "input source map, useful if you're compressing JS that was generated from some other original code")
+
 clint.command('--xclude', '-x')
 clint.command('--digraph', '-dg', null, bool)
-
 
 var help = function(err){
     // header
@@ -60,10 +68,6 @@ if (!args.length) help(1)
  //initialize wrapup
 
 var wrup = new WrapUp()
-
-// consolize wrup errors
-
-wrup.log("ERROR".red.inverse + ": ")
 
 var pass = false
 
@@ -86,15 +90,17 @@ clint.on("command", function(name, value){
 
     switch (name){
 
-        case "--help"      : help(0);                                      break
-        case "--version"   : console.log(json.version); process.exit(0);   break
-        case "--xclude"    : if (value != null) wrup.exclude(value);       break
-        case "--digraph"   : options.graph = value == null ? true : value; break
-        case "--wrup"      : options.wrup = value == null ? true : value;  break
-        case "--globalize" : options.globalize = value;                    break
-        case "--compress"  : options.compress = true;                      break
-        case "--watch"     : options.watch = value == null ? true : value; break
-        case "--output"    : options.output = value || false;              break
+        case "--help"            : help(0);                                      break
+        case "--version"         : console.log(json.version); process.exit(0);   break
+        case "--xclude"          : if (value != null) wrup.exclude(value);       break
+        case "--digraph"         : options.graph = value == null ? true : value; break
+        case "--globalize"       : options.globalize = value;                    break
+        case "--compress"        : options.compress = true;                      break
+        case "--watch"           : options.watch = value == null ? true : value; break
+        case "--output"          : options.output = value || false;              break
+        case "--source-map"      : options.sourcemap = value || false;           break
+        case "--source-map-root" : options.sourcemapRoot = value || false;       break
+        case "--in-source-map"   : options.sourcemapIn = value || false;         break
 
     }
 
@@ -104,29 +110,36 @@ clint.on('complete', function(){
 
     if (!pass) help(1)
 
-    if (!options.output) options.watch = false
+    if (!options.output){
+        options.watch = false
+        wrup.pipe(process.stdout)
+    }
+
+    wrup.options(options)
 
     wrup.on("change", function(fullpath){
         console.warn("=>".blue.inverse + " " + path.relative(process.cwd(), fullpath).grey + " was changed")
     })
 
-    wrup.on("done", function(data){
-
+    wrup.on("end", function(){
         if (options.output){
-
             console.warn("DONE".green.inverse + ": the file " + options.output.grey + " has been written")
-
         } else {
-
-            console.log(data)
             console.warn("DONE".green.inverse)
-
         }
     })
 
-    wrup.up(options)
+    wrup.on("warn", function(err){
+        console.error(err.message.red)
+    })
 
-    if (!options.watch) process.exit(0)
+    wrup.on("error", function(err){
+        console.error("FATAL:".red.inverse + " " + err.message.red)
+    })
+
+    if (options.graph) wrup.graph()
+    else if (options.watch) wrup.watch()
+    else wrup.up()
 
 })
 
