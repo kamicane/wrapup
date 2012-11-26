@@ -26,6 +26,7 @@ exports.test = function(test){
     console.log(("✔ " + test + " test passed").green)
 }
 
+require('./up')
 require('./pipe')
 require('./globalize')
 require('./notresolved')
