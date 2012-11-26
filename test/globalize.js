@@ -8,7 +8,7 @@ var test   = require('./run').test
 
 wrup.options({
     output: __dirname + '/output/globalize.result.js',
-	globalize: "this"
+    globalize: "this"
 })
 
 wrup.on("error", function(err){
