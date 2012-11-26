@@ -9,7 +9,7 @@ var passed = require('./run').passed
 var stream = fs.createWriteStream(__dirname + '/output/graph.result.dot')
 
 wrup.options({
-    output: __dirname + '/output/graph-out.result.png'
+    //output: __dirname + '/output/graph-out.result.png'
 })
 
 wrup.pipe(stream)
