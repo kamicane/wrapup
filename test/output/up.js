@@ -13,6 +13,10 @@
     "0": function(require, module, exports, global) {
         require("1");
         var a = require("2").name;
+        var b = new (require("2"))();
+        var c = new require("2");
+        var d = {a: require("2")};
+        var e = require("1") + require("1");
         module.exports = require("2")();
     },
     "1": function(require, module, exports, global) {
