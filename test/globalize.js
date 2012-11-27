@@ -1,8 +1,6 @@
 "use strict";
 
-var fs     = require('fs')
 var assert = require('assert')
-var colors = require('colors')
 var wrup   = require('../lib/main')()
 var test   = require('./run').test
 

@@ -2,7 +2,6 @@
 
 var fs     = require('fs')
 var assert = require('assert')
-var colors = require('colors')
 var wrup   = require('../lib/main')()
 var passed = require('./run').passed
 

@@ -5,6 +5,8 @@ var ujs    = require('uglify-js')
 var assert = require('assert')
 var path   = require('path')
 
+require("colors")
+
 var parseAndWrite = function(file){
     var code = fs.readFileSync(file, "utf-8")
     var ast = ujs.parse(code)
@@ -35,3 +37,4 @@ require('./pipe')
 require('./globalize')
 require('./notresolved')
 require('./graph')
+require('./sourcemap')
