@@ -135,7 +135,7 @@ clint.on('complete', function(){
     })
 
     wrup.on("warn", function(err){
-        console.error(err.message.red)
+        console.error("ERROR:".red.inverse + " " + err.message)
     })
 
     wrup.on("error", function(err){
