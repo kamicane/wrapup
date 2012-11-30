@@ -127,11 +127,11 @@ clint.on('complete', function(){
     })
 
     wrup.on("end", function(){
-        if (options.output){
-            console.warn("DONE".green.inverse + ": the file " + options.output.grey + " has been written")
-        } else {
-            console.warn("DONE".green.inverse)
-        }
+        console.warn("DONE".green.inverse)
+    })
+
+    wrup.on("output", function(file){
+        console.warn("DONE".green.inverse + ": the file " + file.grey + " has been written")
     })
 
     wrup.on("warn", function(err){
