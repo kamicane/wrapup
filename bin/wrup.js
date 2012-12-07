@@ -35,8 +35,8 @@ var handleErr = function(err){
         case "empty": break
 
         case "namespace":
-            dmessage = err.namespace.yellow + " already in use by " + error.module.yellow
-            message = err.namespace + " in use by " + error.module
+            dmessage = err.namespace.yellow + " already in use by " + err.module.yellow
+            message = err.namespace + " in use by " + err.module
         break
 
         case "native":
