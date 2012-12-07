@@ -13,6 +13,42 @@ var bool = function(value){
     return value
 }
 
+var handleErr = function(err){
+
+    var title = err.message, message, dmessage
+
+    switch(err.type){
+        case "graphviz": break
+
+        case "js":
+            dmessage = "on " + err.module.yellow +
+                " required by " + err.source.yellow +
+                " at line " + err.line + ", column " + err.col
+            message = err.module + " on line " + err.line + ", column " + err.col
+        break
+
+        case "resolve":
+            dmessage = "on module " + err.module.yellow + " required by " + err.source.yellow
+            message  = err.module + " < " + err.source
+        break
+
+        case "empty": break
+
+        case "namespace":
+            dmessage = err.namespace.yellow + " already in use by " + error.module.yellow
+            message = err.namespace + " in use by " + error.module
+        break
+
+        case "native":
+            dmessage = "on module " + err.module.yellow + " required by " + err.source.yellow
+            message = "on module " + err.module + " required by " + err.source
+        break
+    }
+
+    console.error(title.red.inverse + ":", dmessage)
+
+}
+
 clint.command('--help', '-h',
              'general usage information.')
 
@@ -134,13 +170,9 @@ clint.on('complete', function(){
         console.warn("DONE".green.inverse + ": the file " + file.grey + " has been written")
     })
 
-    wrup.on("warn", function(err){
-        console.error("ERROR:".red.inverse + " " + err.message)
-    })
+    wrup.on("warn", handleErr)
 
-    wrup.on("error", function(err){
-        console.error("FATAL:".red.inverse + " " + err.message.red)
-    })
+    wrup.on("error", handleErr)
 
     if (options.graph) wrup.graph()
     else if (options.watch) wrup.watch()
