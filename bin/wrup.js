@@ -17,7 +17,7 @@ var handleErr = function(err){
 
     var title = err.message, message, dmessage
 
-    switch(err.type){
+    switch (err.type){
         case "graphviz": break
 
         case "js":
@@ -153,7 +153,6 @@ clint.on('complete', function(){
 
     if (!options.output){
         options.watch = false
-        wrup.pipe(process.stdout)
     }
 
     wrup.options(options)
@@ -175,8 +174,14 @@ clint.on('complete', function(){
     wrup.on("error", handleErr)
 
     if (options.graph) wrup.graph()
-    else if (options.watch) wrup.watch()
-    else wrup.up()
+    else if (options.watch) wrup.watch('browser')
+    else {
+        var browser = wrup.browser()
+        browser.pipe(process.stdout)
+        browser.up(function(err){
+            if (err) throw err
+        })
+    }
 
 })
 

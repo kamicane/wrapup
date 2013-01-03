@@ -31,6 +31,8 @@
     "clint": "0.0.6",
     "prime": "0.0.6",
     "uglify-js": "2.2",
+    "esprima": "1.0",
+    "escodegen": "0.0.15",
     "graphviz": "0.0.x"
   },
   "devDependencies": {},
