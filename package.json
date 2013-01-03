@@ -33,7 +33,8 @@
     "uglify-js": "2.2",
     "esprima": "1.0",
     "escodegen": "0.0.15",
-    "graphviz": "0.0.x"
+    "graphviz": "0.0.x",
+    "mkdirp": "0.3"
   },
   "devDependencies": {},
   "optionalDependencies": {},

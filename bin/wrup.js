@@ -176,8 +176,7 @@ clint.on('complete', function(){
     if (options.graph) wrup.graph()
     else if (options.watch) wrup.watch('browser')
     else {
-        var browser = wrup.browser()
-        browser.pipe(process.stdout)
+        var browser = wrup.amd()
         browser.up(function(err){
             if (err) throw err
         })
