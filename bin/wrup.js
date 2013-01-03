@@ -90,6 +90,8 @@ clint.command('--in-source-map', null,
 
 clint.command('--xclude', '-x')
 clint.command('--digraph', '-dg', null, bool)
+clint.command('--amd', null, null, bool)
+clint.command('--qt', null, null, bool)
 
 var help = function(err){
     // header
@@ -134,6 +136,8 @@ clint.on("command", function(name, value){
         case "--version"         : console.log(json.version); process.exit(0);   break
         case "--xclude"          : if (value != null) wrup.exclude(value);       break
         case "--digraph"         : options.graph = value == null ? true : value; break
+        case "--amd"             : options.amd = value == null ? true : value;   break
+        case "--qt"              : options.qt = value == null ? true : value;    break
         case "--globalize"       : options.globalize = value;                    break
         case "--compress"        : options.compress = true;                      break
         case "--watch"           : options.watch = value == null ? true : value; break
@@ -165,22 +169,25 @@ clint.on('complete', function(){
         console.warn("DONE".green.inverse)
     })
 
+    wrup.on("data", function(chunk){
+        if (!options.output) console.log(chunk)
+    })
+
     wrup.on("output", function(file){
         console.warn("DONE".green.inverse + ": the file " + file.grey + " has been written")
     })
 
     wrup.on("warn", handleErr)
-
     wrup.on("error", handleErr)
 
-    if (options.graph) wrup.graph()
-    else if (options.watch) wrup.watch('browser')
-    else {
-        var browser = wrup.amd()
-        browser.up(function(err){
-            if (err) throw err
-        })
-    }
+    var method
+    if (options.graph) method = 'graph'
+    else if (options.amd) method = 'amd'
+    else if (options.qt) method = 'qt'
+    else method = 'browser'
+
+    if (options.watch) wrup.watch(method)
+    else wrup[method]()
 
 })
 
