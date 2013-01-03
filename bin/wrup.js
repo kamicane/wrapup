@@ -92,6 +92,7 @@ clint.command('--xclude', '-x')
 clint.command('--digraph', '-dg', null, bool)
 clint.command('--amd', null, null, bool)
 clint.command('--qt', null, null, bool)
+clint.command('--ast', null, "Output AST JSON structure, so it can be used by other tools, like uglifyjs2 with " + "--spidermonkey".green, bool)
 
 var help = function(err){
     // header
@@ -146,6 +147,7 @@ clint.on("command", function(name, value){
         case "--source-map-url"  : options.sourcemapURL = value || false;        break
         case "--source-map-root" : options.sourcemapRoot = value || false;       break
         case "--in-source-map"   : options.sourcemapIn = value || false;         break
+        case "--ast"             : options.ast = value == null ? true : value;   break
 
     }
 
