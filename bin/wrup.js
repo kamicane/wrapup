@@ -85,9 +85,6 @@ clint.command('--source-map-url', null,
              'relative or absolute URL to find the source map file ' +
              '--source-map-url http://localhost/js/wrup.map'.green)
 
-clint.command('--in-source-map', null,
-             "input source map, useful if you're compressing JS that was generated from some other original code")
-
 clint.command('--xclude', '-x')
 clint.command('--digraph', '-dg', null, bool)
 clint.command('--amd', null, null, bool)
@@ -146,7 +143,6 @@ clint.on("command", function(name, value){
         case "--source-map"      : options.sourcemap = value || false;           break
         case "--source-map-url"  : options.sourcemapURL = value || false;        break
         case "--source-map-root" : options.sourcemapRoot = value || false;       break
-        case "--in-source-map"   : options.sourcemapIn = value || false;         break
         case "--ast"             : options.ast = value == null ? true : value;   break
 
     }
@@ -176,7 +172,7 @@ clint.on('complete', function(){
     })
 
     wrup.on("output", function(file){
-        console.warn("DONE".green.inverse + ": the file " + file.grey + " has been written")
+        console.warn("The file " + file.grey + " has been written")
     })
 
     wrup.on("warn", handleErr)
