@@ -16,10 +16,12 @@ wrup.on("error", function(err){
     assert.fail(err, undefined, "no errors should occur")
 })
 
-wrup.require(__dirname + '/fixtures/e').up(function(err){
+wrup.require(__dirname + '/fixtures/e').up(function(err, code){
     assert.ifError(err)
     var stat = fs.statSync(__dirname + '/output/sourcemap.result.map')
     assert.ok(stat.size > 0)
+    assert.ok(code.indexOf('sourceMappingURL=http://localhost:8000/test/output/sourcemap.result.map') != -1,
+        'should have correct sourceMappingURL')
     test('sourcemap')
 })
 
