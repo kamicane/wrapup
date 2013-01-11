@@ -139,7 +139,6 @@ clint.on("command", function(name, value){
 
         case "--help"            : help(0);                                              break
         case "--version"         : console.log(json.version); process.exit(0);           break
-        case "--xclude"          : if (value != null) wrup.exclude(value);               break
         case "--digraph"         : options.graph = value == null ? true : value;         break
         case "--amd"             : options.amd = value == null ? true : value;           break
         case "--globalize"       : options.globalize = value;                            break
