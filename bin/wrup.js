@@ -67,6 +67,8 @@ clint.command('--globalize', '-g',
              'define the global scope where named modules are attached to. Defaults to window, ' +
              '-g MyNameSpace'.green)
 
+clint.command('--globalize-vars', null,
+              'globalize using "var" statements, instead of using a global object', bool)
 
 clint.command('--output', '-o',
              'wraps up the contents of your required modules to the specified filename, instead of stdout. ' + '-o path/to/file'.green)
@@ -87,9 +89,14 @@ clint.command('--source-map-url', null,
 
 clint.command('--xclude', '-x')
 clint.command('--digraph', '-dg', null, bool)
-clint.command('--amd', null, null, bool)
-clint.command('--qt', null, null, bool)
-clint.command('--ast', null, "Output AST JSON structure, so it can be used by other tools, like uglifyjs2 with " + "--spidermonkey".green, bool)
+
+clint.command('--amd', null,
+              "Convert CommonJS modules to AMD modules. The --output option is used " +
+              "as output directory and is required.", bool)
+
+clint.command('--ast', null,
+              "Output AST JSON structure, so it can be used by other tools, " +
+              "like uglifyjs2 with " + "--spidermonkey".green, bool)
 
 var help = function(err){
     // header
@@ -130,20 +137,20 @@ clint.on("command", function(name, value){
 
     switch (name){
 
-        case "--help"            : help(0);                                      break
-        case "--version"         : console.log(json.version); process.exit(0);   break
-        case "--xclude"          : if (value != null) wrup.exclude(value);       break
-        case "--digraph"         : options.graph = value == null ? true : value; break
-        case "--amd"             : options.amd = value == null ? true : value;   break
-        case "--qt"              : options.qt = value == null ? true : value;    break
-        case "--globalize"       : options.globalize = value;                    break
-        case "--compress"        : options.compress = true;                      break
-        case "--watch"           : options.watch = value == null ? true : value; break
-        case "--output"          : options.output = value || false;              break
-        case "--source-map"      : options.sourcemap = value || false;           break
-        case "--source-map-url"  : options.sourcemapURL = value || false;        break
-        case "--source-map-root" : options.sourcemapRoot = value || false;       break
-        case "--ast"             : options.ast = value == null ? true : value;   break
+        case "--help"            : help(0);                                              break
+        case "--version"         : console.log(json.version); process.exit(0);           break
+        case "--xclude"          : if (value != null) wrup.exclude(value);               break
+        case "--digraph"         : options.graph = value == null ? true : value;         break
+        case "--amd"             : options.amd = value == null ? true : value;           break
+        case "--globalize"       : options.globalize = value;                            break
+        case "--globalize-vars"  : options.globalizeVars = value == null ? true : value; break
+        case "--compress"        : options.compress = true;                              break
+        case "--watch"           : options.watch = value == null ? true : value;         break
+        case "--output"          : options.output = value || false;                      break
+        case "--source-map"      : options.sourcemap = value || false;                   break
+        case "--source-map-url"  : options.sourcemapURL = value || false;                break
+        case "--source-map-root" : options.sourcemapRoot = value || false;               break
+        case "--ast"             : options.ast = value == null ? true : value;           break
 
     }
 
@@ -181,7 +188,6 @@ clint.on('complete', function(){
     var method
     if (options.graph) method = 'graph'
     else if (options.amd) method = 'amd'
-    else if (options.qt) method = 'qt'
     else method = 'browser'
 
     if (options.watch) wrup.watch(method)
