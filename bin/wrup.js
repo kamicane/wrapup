@@ -45,7 +45,7 @@ var handleErr = function(err){
         break
     }
 
-    console.error(title.red.inverse + ":", dmessage)
+    console.error(title.red.inverse + (dmessage ? ": " + dmessage : ""))
 
 }
 
