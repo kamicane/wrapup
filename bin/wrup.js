@@ -25,24 +25,30 @@ var handleErr = function(err){
                 " required by " + err.source.yellow +
                 " at line " + err.line + ", column " + err.col
             message = err.module + " on line " + err.line + ", column " + err.col
-        break
+            break
 
         case "resolve":
             dmessage = "on module " + err.module.yellow + " required by " + err.source.yellow
             message  = err.module + " < " + err.source
-        break
+            break
 
         case "empty": break
 
         case "namespace":
             dmessage = err.namespace.yellow + " already in use by " + err.module.yellow
             message = err.namespace + " in use by " + err.module
-        break
+            break
 
         case "native":
             dmessage = "on module " + err.module.yellow + " required by " + err.source.yellow
             message = "on module " + err.module + " required by " + err.source
-        break
+            break
+
+        case "out-of-scope":
+            dmessage = "on file " + err.file.yellow
+            message = "on file " + err.file
+            break
+
     }
 
     console.error(title.red.inverse + (dmessage ? ": " + dmessage : ""))
