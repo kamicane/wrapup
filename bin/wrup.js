@@ -175,10 +175,6 @@ clint.on('complete', function(){
         console.warn("=>".blue.inverse + " " + path.relative(process.cwd(), fullpath).grey + " was changed")
     })
 
-    wrup.on("end", function(){
-        console.warn("DONE".green.inverse)
-    })
-
     wrup.on("data", function(chunk){
         if (!options.output) console.log(chunk)
     })
@@ -187,8 +183,18 @@ clint.on('complete', function(){
         console.warn("The file " + file.grey + " has been written")
     })
 
+    var exit = 0
+
+    wrup.on("end", function(){
+        console.warn("DONE".green.inverse)
+        if (exit) process.exit(exit)
+    })
+
     wrup.on("warn", handleErr)
-    wrup.on("error", handleErr)
+    wrup.on("error", function(err){
+        handleErr(err)
+        exit = 1
+    })
 
     var method
     if (options.graph) method = 'graph'
