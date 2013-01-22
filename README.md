@@ -8,6 +8,7 @@
  * WrapUp supports building multiple versions of the same package.
  * WrapUp supports circular module dependencies.
  * WrapUp can watch source files for changes and rebuild automatically.
+ * WrapUp can convert CommonJS modules to AMD modules.
 
 [![Build Status](https://secure.travis-ci.org/mootools/wrapup.png)](https://travis-ci.org/mootools/wrapup)
 
@@ -92,7 +93,11 @@ require("someOtherPackage")
 WrapUp supports watching source files and rebuilds automatically whenever one of
 these changes.
 
-cli: `--watch`
+#### cli
+
+`--watch`
+
+#### js
 
 Instead of using the `.up()` method, the `.watch()` method is used.
 
@@ -125,19 +130,29 @@ wrup.options({
 })
 ```
 
- - `globalize` define the global scope where named modules are attached to. Defaults to window.
- - `compress` if set to true, will compress the resulting javascript file using uglify-js. Defaults to false.
- - `output` only available in the cli, used to specify an output file. defaults to stdout.
- - `sourcemap` (cli: `--source-map`) Specify an output file where to generate source map.
- - `sourcemapURL` (cli: `--source-map-url`) `//@ sourceMappingURL` value, URL to the saved sourcemap file.
- - `sourcemapRoot` (cli: `--source-map-root`) The path to the original source to be included in the source map.
- - `sourcemapIn` (cli: `--in-source-map`) Input source map, useful if you're compressing JS that was generated from some other original code.
+ - `globalize` define the global scope where named modules are attached to.
+   Defaults to `window`.
+ - `globalizeVars` instead of placing the modules on a `--globalize` object, it
+   uses `var` statements in the global scope.
+ - `compress` if set to true, will compress the resulting javascript file using
+   uglify-js. Defaults to false.
+ - `output` only available in the cli, used to specify an output file. defaults
+   to stdout.
+ - `sourcemap` (cli: `--source-map`) Specify an output file where to generate
+   source map.
+ - `sourcemapURL` (cli: `--source-map-url`) `//@ sourceMappingURL` value, URL to
+   the saved sourcemap file.
+ - `sourcemapRoot` (cli: `--source-map-root`) The path to the original source to
+   be included in the source map.
+ - `ast` the output is a JSON object of the AST, instead of JavaScript. Can be
+   used as uglifyjs input, using `uglifyjs --spidermonkey`.
 
 #### cli
 
-```
-wrup --require ... --globalize MyNameSpace --compress --output path/to/file.js --watch
-```
+Additional cli options:
+
+ - `--amd` when using the `--amd`, it will convert CommonJS modules to AMD
+   modules. The `--output` option should be a directory.
 
 #### js
 
@@ -193,5 +208,28 @@ http.createServer(function(req, res){
 ```
 
 ### Examples
+
+#### cli
+
+``` bash
+# simple building a file
+wrup --require ./main.js --output built.js
+
+# compressing the file
+wrup --require ./main.js --output built.js --compress
+
+# watching, and use another global object, so MyNameSpace.modulename == module.exports of main.js
+wrup --require modulename ./main.js --globalize MyNameSpace --compress --output path/to/file.js --watch
+
+# building AMD
+wrup --require ./main.js --amd --output ./converted-to-amd
+
+# piping the AST JSON into uglifyjs
+wrup --require ./main.js --ast | uglifyjs --spidermonkey -c -m
+
+# source maps
+wrup -r ./main.js --output test.js --source-map test.map
+```
+#### JavaScript
 
 coming soon... :)
