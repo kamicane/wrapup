@@ -17,7 +17,7 @@ var handleErr = function(err){
 
     var title = err.message, message, dmessage
 
-    switch(err.type){
+    switch (err.type){
         case "graphviz": break
 
         case "js":
@@ -25,27 +25,33 @@ var handleErr = function(err){
                 " required by " + err.source.yellow +
                 " at line " + err.line + ", column " + err.col
             message = err.module + " on line " + err.line + ", column " + err.col
-        break
+            break
 
         case "resolve":
             dmessage = "on module " + err.module.yellow + " required by " + err.source.yellow
             message  = err.module + " < " + err.source
-        break
+            break
 
         case "empty": break
 
         case "namespace":
             dmessage = err.namespace.yellow + " already in use by " + err.module.yellow
             message = err.namespace + " in use by " + err.module
-        break
+            break
 
         case "native":
             dmessage = "on module " + err.module.yellow + " required by " + err.source.yellow
             message = "on module " + err.module + " required by " + err.source
-        break
+            break
+
+        case "out-of-scope":
+            dmessage = "on file " + err.file.yellow
+            message = "on file " + err.file
+            break
+
     }
 
-    console.error(title.red.inverse + ":", dmessage)
+    console.error(title.red.inverse + (dmessage ? ": " + dmessage : ""))
 
 }
 
@@ -67,6 +73,8 @@ clint.command('--globalize', '-g',
              'define the global scope where named modules are attached to. Defaults to window, ' +
              '-g MyNameSpace'.green)
 
+clint.command('--globalize-vars', null,
+              'globalize using "var" statements, instead of using a global object', bool)
 
 clint.command('--output', '-o',
              'wraps up the contents of your required modules to the specified filename, instead of stdout. ' + '-o path/to/file'.green)
@@ -85,11 +93,16 @@ clint.command('--source-map-url', null,
              'relative or absolute URL to find the source map file ' +
              '--source-map-url http://localhost/js/wrup.map'.green)
 
-clint.command('--in-source-map', null,
-             "input source map, useful if you're compressing JS that was generated from some other original code")
-
 clint.command('--xclude', '-x')
 clint.command('--digraph', '-dg', null, bool)
+
+clint.command('--amd', null,
+              "Convert CommonJS modules to AMD modules. The --output option is used " +
+              "as output directory and is required.", bool)
+
+clint.command('--ast', null,
+              "Output AST JSON structure, so it can be used by other tools, " +
+              "like uglifyjs2 with " + "--spidermonkey".green, bool)
 
 var help = function(err){
     // header
@@ -130,18 +143,19 @@ clint.on("command", function(name, value){
 
     switch (name){
 
-        case "--help"            : help(0);                                      break
-        case "--version"         : console.log(json.version); process.exit(0);   break
-        case "--xclude"          : if (value != null) wrup.exclude(value);       break
-        case "--digraph"         : options.graph = value == null ? true : value; break
-        case "--globalize"       : options.globalize = value;                    break
-        case "--compress"        : options.compress = true;                      break
-        case "--watch"           : options.watch = value == null ? true : value; break
-        case "--output"          : options.output = value || false;              break
-        case "--source-map"      : options.sourcemap = value || false;           break
-        case "--source-map-url"  : options.sourcemapURL = value || false;        break
-        case "--source-map-root" : options.sourcemapRoot = value || false;       break
-        case "--in-source-map"   : options.sourcemapIn = value || false;         break
+        case "--help"            : help(0);                                              break
+        case "--version"         : console.log(json.version); process.exit(0);           break
+        case "--digraph"         : options.graph = value == null ? true : value;         break
+        case "--amd"             : options.amd = value == null ? true : value;           break
+        case "--globalize"       : options.globalize = value;                            break
+        case "--globalize-vars"  : options.globalizeVars = value == null ? true : value; break
+        case "--compress"        : options.compress = true;                              break
+        case "--watch"           : options.watch = value == null ? true : value;         break
+        case "--output"          : options.output = value || false;                      break
+        case "--source-map"      : options.sourcemap = value || false;                   break
+        case "--source-map-url"  : options.sourcemapURL = value || false;                break
+        case "--source-map-root" : options.sourcemapRoot = value || false;               break
+        case "--ast"             : options.ast = value == null ? true : value;           break
 
     }
 
@@ -153,7 +167,6 @@ clint.on('complete', function(){
 
     if (!options.output){
         options.watch = false
-        wrup.pipe(process.stdout)
     }
 
     wrup.options(options)
@@ -162,21 +175,34 @@ clint.on('complete', function(){
         console.warn("=>".blue.inverse + " " + path.relative(process.cwd(), fullpath).grey + " was changed")
     })
 
-    wrup.on("end", function(){
-        console.warn("DONE".green.inverse)
+    wrup.on("data", function(chunk){
+        if (!options.output) console.log(chunk)
     })
 
     wrup.on("output", function(file){
-        console.warn("DONE".green.inverse + ": the file " + file.grey + " has been written")
+        console.warn("The file " + file.grey + " has been written")
+    })
+
+    var exit = 0
+
+    wrup.on("end", function(){
+        console.warn("DONE".green.inverse)
+        if (exit) process.exit(exit)
     })
 
     wrup.on("warn", handleErr)
+    wrup.on("error", function(err){
+        handleErr(err)
+        exit = 1
+    })
 
-    wrup.on("error", handleErr)
+    var method
+    if (options.graph) method = 'graph'
+    else if (options.amd) method = 'amd'
+    else method = 'browser'
 
-    if (options.graph) wrup.graph()
-    else if (options.watch) wrup.watch()
-    else wrup.up()
+    if (options.watch) wrup.watch(method)
+    else wrup[method]()
 
 })
 

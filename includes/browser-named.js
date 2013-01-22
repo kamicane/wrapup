@@ -1,0 +1,1 @@
+global['name'] = require('uid');
