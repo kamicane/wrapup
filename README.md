@@ -16,19 +16,19 @@
 
 WrapUp is installed via npm:
 
-```
+``` bash
 npm install wrapup -g
 ```
 
 After that, you will have access to `wrup` in your cli.
 
-```
+``` bash
 wrup --help
 ```
 
 You can also install locally:
 
-```
+``` bash
 npm install wrapup
 ```
 
@@ -60,7 +60,7 @@ namespace, the module will be required without being assigned. A bit like doing
 
 #### cli
 
-```
+``` bash
 wrup --require colors colors --require someName ./path/to/otherModule --require someOtherPackage
 ```
 
@@ -153,6 +153,9 @@ Additional cli options:
 
  - `--amd` when using the `--amd`, it will convert CommonJS modules to AMD
    modules. The `--output` option should be a directory.
+ - `--digraph` generate a [dot](http://www.graphviz.org/) output. If you've
+   installed graphviz, you can use the `--output` option, like
+   `--output graph.png`
 
 #### js
 
@@ -170,12 +173,12 @@ wrup.require(/*...*/)
 
 ### Using Source Maps
 
-WrapUp utilizes UglifyJS internally to create source-maps, and has the same
-options, `--source-map`, `--source-map-root` and `--in-source-map`.
+The options for source-maps that can be used are `--source-map` and
+`--source-map-root`.
 
 Once the `.map` file is created, the page with the JavaScript can be opened. It
-is important that the original files are accessible through http too. For example
-when using `--require ./test/a --source-map test.map --source-map-root
+is important that the original files are accessible through http too. For
+example when using `--require ./test/a --source-map test.map --source-map-root
 http://foo.com/src` the file `http://foo.com/src/test/a.js` should be the
 original JavaScript module.
 
@@ -184,7 +187,7 @@ original JavaScript module.
 The WrapUp output can be piped into UglifyJS if more compression options are
 desired. For example using the `--define` option to set global definitions.
 
-```
+``` bash
 wrup -r ./main.js --source-map ./main.map \
      | uglify -d DEV=false --compress --mangle --output ./main.min.js \
               --source-map main.map --in-source-map main.map
@@ -221,6 +224,10 @@ wrup --require ./main.js --output built.js --compress
 # watching, and use another global object, so MyNameSpace.modulename == module.exports of main.js
 wrup --require modulename ./main.js --globalize MyNameSpace --compress --output path/to/file.js --watch
 
+# export modules in the global scope with "var" statements
+# this will create a "var moofx = ..." statement
+wrup -r moofx ./moofx --globalize-vars
+
 # building AMD
 wrup --require ./main.js --amd --output ./converted-to-amd
 
@@ -229,7 +236,15 @@ wrup --require ./main.js --ast | uglifyjs --spidermonkey -c -m
 
 # source maps
 wrup -r ./main.js --output test.js --source-map test.map
+
+# generating a visual dependency graph
+wrup -r ./main --digraph
+# this requires that graphviz is installed
+wrup -r ./main --digraph --output graph.png
+# or pipe it into the "dot" command line tool
+wrup -r ./main --digraph | dot -Tpng -o graph.png
 ```
+
 #### JavaScript
 
 coming soon... :)
