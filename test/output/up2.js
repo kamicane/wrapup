@@ -1,3 +1,4 @@
+var test, bar;
 (function(modules) {
     var cache = {}, require = function(id) {
         var module = cache[id];
@@ -8,7 +9,8 @@
         }
         return module.exports;
     };
-    window["test"] = require("0")
+    test = require("0");
+    bar = require("1");
 })({
     "0": function(require, module, exports, global) {
         require("1");

@@ -1,1 +1,1 @@
-var name = __require('uid');
+name = require('uid');

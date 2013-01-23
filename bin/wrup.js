@@ -70,11 +70,9 @@ clint.command('--compress', '-c',
              '-c'.green + ' or ' + '-c yes'.green + ' to enable', bool)
 
 clint.command('--globalize', '-g',
-             'define the global scope where named modules are attached to. Defaults to window, ' +
+             'define the global scope where named modules are attached to. ' +
+             'Defaults to using global var statements. ' +
              '-g MyNameSpace'.green)
-
-clint.command('--globalize-vars', null,
-              'globalize using "var" statements, instead of using a global object', bool)
 
 clint.command('--output', '-o',
              'wraps up the contents of your required modules to the specified filename, instead of stdout. ' + '-o path/to/file'.green)
@@ -148,7 +146,6 @@ clint.on("command", function(name, value){
         case "--digraph"         : options.graph = value == null ? true : value;         break
         case "--amd"             : options.amd = value == null ? true : value;           break
         case "--globalize"       : options.globalize = value;                            break
-        case "--globalize-vars"  : options.globalizeVars = value == null ? true : value; break
         case "--compress"        : options.compress = true;                              break
         case "--watch"           : options.watch = value == null ? true : value;         break
         case "--output"          : options.output = value || false;                      break

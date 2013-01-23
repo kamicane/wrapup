@@ -83,8 +83,9 @@ someOtherPackage simply required without being assigned to any variable. The
 ouput code assigning variables would look like this:
 
 ```js
-window.colors = require("colors")
-window.someName = require("someName")
+// those are global var statements
+var colors = require("colors")
+var someName = require("someName")
 require("someOtherPackage")
 ```
 
@@ -131,9 +132,7 @@ wrup.options({
 ```
 
  - `globalize` define the global scope where named modules are attached to.
-   Defaults to `window`.
- - `globalizeVars` instead of placing the modules on a `--globalize` object, it
-   uses `var` statements in the global scope.
+   By default it uses global var statements.
  - `compress` if set to true, will compress the resulting javascript file using
    uglify-js. Defaults to false.
  - `output` only available in the cli, used to specify an output file. defaults
@@ -226,7 +225,7 @@ wrup --require modulename ./main.js --globalize MyNameSpace --compress --output 
 
 # export modules in the global scope with "var" statements
 # this will create a "var moofx = ..." statement
-wrup -r moofx ./moofx --globalize-vars
+wrup -r moofx ./moofx
 
 # building AMD
 wrup --require ./main.js --amd --output ./converted-to-amd

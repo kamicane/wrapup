@@ -26,7 +26,10 @@ wrup2.on("error", function(err){
     assert.fail(err, undefined, "no errors should occur")
 })
 
-wrup2.require("test", __dirname + "/fixtures/up").up(function(err, data){
+wrup2.require("test", __dirname + "/fixtures/up")
+    .require("bar", __dirname + "/fixtures/e")
+
+wrup2.up(function(err, data){
     fs.writeFileSync(__dirname + "/output/up2.result.js", data)
     test('up2')
 })
