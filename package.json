@@ -1,7 +1,7 @@
 {
   "name": "wrapup",
   "description": "wraps up node packages for web development",
-  "version": "0.11.0",
+  "version": "0.11.1",
   "license": "MIT (http://mootools.net/license.txt)",
   "main": "./lib/main.js",
   "bin": {
