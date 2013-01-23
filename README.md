@@ -192,6 +192,14 @@ wrup -r ./main.js --source-map ./main.map \
               --source-map main.map --in-source-map main.map
 ```
 
+Using the `--ast` option, and the UglifyJS `--spidermonkey` option, the code
+can be piped to UglifyJS as an Abstract Syntax Tree JSON. This saves UglifyJS
+parsing the generated WrapUp JavaScript.
+
+```bash
+wrup -r ./main --ast | uglifyjs --spidermonkey -c -m --output compressed.js
+```
+
 ### Stream and pipe
 
 WrapUp implements Node [Stream](http://nodejs.org/api/stream.html#stream_readable_stream)
