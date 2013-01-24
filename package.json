@@ -29,7 +29,7 @@
     "async": "0.1",
     "colors": "*",
     "clint": "0.0.6",
-    "prime": "0.0.6",
+    "prime": "0.1",
     "esprima": "1.0",
     "escodegen": "0.0.15",
     "esmangle": "0.0.9",
