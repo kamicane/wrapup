@@ -16,14 +16,14 @@
     "browser",
     "package manager"
   ],
-  "homepage": "http://github.com/kamicane/wrapup",
+  "homepage": "http://github.com/mootools/wrapup",
   "author": "Valerio Proietti <@kamicane> (http://mad4milk.net)",
   "bugs": {
-    "url": "https://github.com/kamicane/wrapup/issues"
+    "url": "https://github.com/mootools/wrapup/issues"
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/kamicane/wrapup.git"
+    "url": "git://github.com/mootools/wrapup.git"
   },
   "dependencies": {
     "async": "0.1",

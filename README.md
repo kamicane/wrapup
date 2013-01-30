@@ -1,9 +1,9 @@
-![wrapup](http://github.com/kamicane/wrapup/raw/master/assets/wrapup.png)
+![wrapup](http://github.com/mootools/wrapup/raw/master/assets/wrapup.png)
 
 ## WrapUp?
 
  * WrapUp compiles CommonJS 1.0 modules for the browser.
- * WrapUp does not try to have a working `require` implementation for the browser, infact the loader WrapUp uses is [incredibly simple](https://github.com/kamicane/wrapup/blob/master/includes/wrapper.js).
+ * WrapUp does not try to have a working `require` implementation for the browser, infact the loader WrapUp uses is [incredibly simple](https://github.com/mootools/wrapup/blob/master/includes/wrapper.js).
  * WrapUp ignores duplicates that may be present when using npm to install packages.
  * WrapUp supports building multiple versions of the same package.
  * WrapUp supports circular module dependencies.
