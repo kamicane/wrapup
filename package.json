@@ -18,6 +18,9 @@
   ],
   "homepage": "http://github.com/mootools/wrapup",
   "author": "Valerio Proietti <@kamicane> (http://mad4milk.net)",
+  "contributors": [
+    "Arian Stolwijk <@arian> (http://aryweb.nl)"
+  ],
   "bugs": {
     "url": "https://github.com/mootools/wrapup/issues"
   },
