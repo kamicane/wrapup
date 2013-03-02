@@ -136,7 +136,10 @@ wrup.options({
  - `compress` if set to true, will compress the resulting javascript file using
    uglify-js. Defaults to false.
  - `output` only available in the cli, used to specify an output file. defaults
-   to stdout.
+   to stdout
+ - `inPath` (cli: `--in-path`) Enforce that all modules are in a specified path.
+   This helps security that a random file cannot require any file on the user's
+   file system.
  - `sourcemap` (cli: `--source-map`) Specify an output file where to generate
    source map.
  - `sourcemapURL` (cli: `--source-map-url`) `//@ sourceMappingURL` value, URL to

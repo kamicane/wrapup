@@ -44,6 +44,13 @@ var handleErr = function(err){
             message = "on module " + err.module + " required by " + err.source
             break
 
+        case "not-in-path":
+            dmessage = "on module " + err.module.yellow + " required by " +
+                err.source.yellow + ". File should be in " + err.path.yellow
+            message = "on module " + err.module + " required by " +
+                err.source + ". File should be in " + err.path
+            break
+
         case "out-of-scope":
             dmessage = "on file " + err.file.yellow
             message = "on file " + err.file
@@ -76,6 +83,9 @@ clint.command('--globalize', '-g',
 
 clint.command('--output', '-o',
              'wraps up the contents of your required modules to the specified filename, instead of stdout. ' + '-o path/to/file'.green)
+
+clint.command('--in-path', null,
+             'Enforce that all required modules are in this specified path' + '--in-path path/to/modules'.green)
 
 clint.command('--watch', '-w',
               'watches changes to every resolved module and wraps up', bool)
@@ -142,17 +152,20 @@ clint.on("command", function(name, value){
     switch (name){
 
         case "--help"            : help(0);                                              break
-        case "--version"         : console.log(json.version); process.exit(0);           break
-        case "--digraph"         : options.graph = value == null ? true : value;         break
-        case "--amd"             : options.amd = value == null ? true : value;           break
-        case "--globalize"       : options.globalize = value;                            break
-        case "--compress"        : options.compress = true;                              break
-        case "--watch"           : options.watch = value == null ? true : value;         break
-        case "--output"          : options.output = value || false;                      break
-        case "--source-map"      : options.sourcemap = value || false;                   break
-        case "--source-map-url"  : options.sourcemapURL = value || false;                break
-        case "--source-map-root" : options.sourcemapRoot = value || false;               break
-        case "--ast"             : options.ast = value == null ? true : value;           break
+        case "--version"         : console.log(json.version); process.exit(0);   break
+        case "--digraph"         : options.graph = value == null ? true : value; break
+        case "--amd"             : options.amd = value == null ? true : value;   break
+        case "--globalize"       : options.globalize = value;                    break
+        case "--compress"        : options.compress = true;                      break
+        case "--output"          : options.output = value || false;              break
+        case "--in-path"         :
+            options.inPath = path.resolve(process.cwd(), value) || false
+            break
+        case "--watch"           : options.watch = value == null ? true : value; break
+        case "--source-map"      : options.sourcemap = value || false;           break
+        case "--source-map-url"  : options.sourcemapURL = value || false;        break
+        case "--source-map-root" : options.sourcemapRoot = value || false;       break
+        case "--ast"             : options.ast = value == null ? true : value;   break
 
     }
 
